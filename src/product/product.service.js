@@ -1,8 +1,12 @@
 //sevice layer bertujuan untuk handle business logic
 //kenapa di pisah? supaya tanggung jawabnya terisolate, dan functionnya reusable
-
-const prisma = require('../db')
-const { findProducts, findProductById } = require('./product.repository')
+const {
+    findProducts,
+    findProductById,
+    insertProduct,
+    deleteProduct,
+    editProduct,
+} = require('./product.repository')
 
 const getAllProducts = async () => {
     const products = await findProducts()
@@ -16,44 +20,23 @@ const getProductById = async (id) => {
         throw Error('product not found')
     }
 
-    res.send(product)
+    return product
 }
 
 const createProduct = async (newProductData) => {
-    const product = await prisma.product.create({
-        data: {
-            name: newProductData.name,
-            price: newProductData.price,
-            description: newProductData.description,
-            image: newProductData.image,
-        },
-    })
+    const product = await insertProduct(newProductData)
 
     return product
 }
 
 const deleteProductById = async (id) => {
     await getProductById(id)
-    await prisma.product.delete({
-        where: {
-            id,
-        },
-    })
+    await deleteProduct
 }
 
-const editProductById = async (id, producData) => {
+const editProductById = async (id, productData) => {
     await getProductById(id)
-    const product = await prisma.product.update({
-        where: {
-            id: parseInt(id),
-        },
-        data: {
-            name: productData.name,
-            description: productData.description,
-            image: productData.image,
-            price: productData.price,
-        },
-    })
+    const product = await editProduct(id, productData)
 
     return product
 }

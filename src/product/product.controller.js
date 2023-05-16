@@ -1,7 +1,6 @@
 // layer untuk handle reques dan response
 // biasanya juga handle validasi dan body
 const express = require('express')
-const prisma = require('../db')
 const {
     getAllProducts,
     getProductById,
